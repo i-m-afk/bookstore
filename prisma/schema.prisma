@@ -11,14 +11,14 @@ datasource db {
 }
 
 model Book {
-  id             String   @id @default(uuid())
-  
+  id String @id @default(uuid())
+
   name           String   @db.VarChar(256)
   description    String?
   link           String?
   cover          String   @default("https://cdn-icons-png.flaticon.com/512/3532/3532144.png")
   isbn           String
-  published_date DateTime
+  published_date DateTime @default(now())
   inStock        Boolean
 
   Author           Author?  @relation(fields: [authorId], references: [id])
@@ -43,18 +43,23 @@ model Customers {
 model Review {
   review_id  String   @id @default(uuid())
   created_on DateTime @default(now())
+
   title      String
   body       String
-  updated_on DateTime
+  updated_on DateTime?
 
-  Customers   Customers? @relation(fields: [customersId], references: [id])
-  customersId String?
-  Book        Book?      @relation(fields: [bookId], references: [id])
-  bookId      String?
+  Customers  Customers? @relation(fields: [customerId], references: [id])
+  customerId String
+  Book       Book?      @relation(fields: [bookId], references: [id])
+  bookId     String
+
+  @@unique([review_id, bookId])
+  @@unique([review_id, customerId])
 }
 
 model Author {
-  id        String  @id @default(uuid())
+  id String @id @default(uuid())
+
   name      String
   biography String?
   photo     String  @default("https://cdn-icons-png.flaticon.com/512/149/149071.png")

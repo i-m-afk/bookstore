@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client'; // Import Prisma types
 import prisma from '../db';
 
 export const getBooks = async (req, res) => {
-    const { name, author, genre } = req.query;
+    const { name, author } = req.query;
     const whereCondition: Prisma.BookWhereInput = {};
 
     if (name) {
@@ -25,10 +25,16 @@ export const getBooks = async (req, res) => {
 
 
 
-export const createBook = async (req, res) => {
-    const data = req.body
-    const book = await prisma.book.create({
-        data: data
-    })
-    res.json({ book })
+export const createBook = async (req, res, next) => {
+    try {
+        const data = req.body
+        const book = await prisma.book.create({
+            data: data
+        })
+        res.json({ book })
+    }
+    catch (e) {
+        console.log(e)
+        next(e)
+    }
 }
