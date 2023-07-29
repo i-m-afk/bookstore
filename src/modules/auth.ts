@@ -5,7 +5,7 @@ export const createJWT = (user) => {
 
     const token = jwt.sign({
         id: user.id, username: user.username
-    }, process.env.JWT_SECRET)
+    }, process.env.JWT_SECRET, { expiresIn: '1d' }) // set expiry date for token
 
     return token
 }
@@ -48,3 +48,15 @@ export const comparePasswords = (password, hash) => {
 export const hashPassword = (password) => {
     return bcrypt.hash(password, 5)
 }
+
+
+// export const isAdmin = (req, res, next) => {
+//     if (req.user.role !== 'admin') {
+//         res.status(403)
+//         res.json({ message: 'not allowed' })
+//         return
+//     }
+//     next()
+// }
+
+

@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Book" ALTER COLUMN "cover" DROP NOT NULL,
+ALTER COLUMN "cover" DROP DEFAULT;
+
+-- AlterTable
+ALTER TABLE "Customers" ALTER COLUMN "avatar" DROP NOT NULL;

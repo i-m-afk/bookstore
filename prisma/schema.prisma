@@ -16,7 +16,7 @@ model Book {
   name           String   @db.VarChar(256)
   description    String?
   link           String?
-  cover          String   @default("https://cdn-icons-png.flaticon.com/512/3532/3532144.png")
+  cover          String?   
   isbn           String
   published_date DateTime @default(now())
   inStock        Boolean
@@ -26,18 +26,22 @@ model Book {
   reviews          Review[]
   Generes          Generes? @relation(fields: [generesGenere_id], references: [genere_id])
   generesGenere_id String?
+  Cart             Cart[]
+  Order            Order[]
 }
 
 model Customers {
-  id       String @id @default(uuid())
-  username String @unique
-  email    String @unique
-  address  String @db.VarChar(256)
-  phone    String @db.VarChar(10)
-  avatar   String @default("https://cdn-icons-png.flaticon.com/512/149/149071.png")
+  id       String  @id @default(uuid())
+  username String  @unique
+  email    String  @unique
+  address  String  @db.VarChar(256)
+  phone    String  @db.VarChar(10)
+  avatar   String?
   password String
 
   reviews Review[]
+  Cart    Cart[]
+  Order   Order[]
 }
 
 model Review {
@@ -72,4 +76,48 @@ model Generes {
   name      String
 
   books Book[]
+}
+
+model Admin {
+  id       String @id @default(uuid())
+  username String @unique
+  email    String @unique
+  password String
+}
+
+model Cart {
+  id String @id @default(uuid())
+
+  quantity Int
+  total    Int
+
+  Customers  Customers? @relation(fields: [customerId], references: [id])
+  customerId String
+  Book       Book?      @relation(fields: [bookId], references: [id])
+  bookId     String
+
+  @@unique([customerId, bookId])
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  quantity Int
+  total    Int
+
+  Customers  Customers? @relation(fields: [customerId], references: [id])
+  customerId String
+  Book       Book?      @relation(fields: [bookId], references: [id])
+  bookId     String
+
+  @@unique([customerId, bookId])
+}
+
+model Token {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  token  String @unique
 }
