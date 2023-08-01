@@ -1,8 +1,10 @@
 import { Prisma } from "@prisma/client"; // Import Prisma types
 import prisma from "../db";
+import { isAdmin } from "../modules/middleware";
 
 // get all books
 export const getBooks = async (req, res) => {
+
     const { name, author } = req.query;
     const whereCondition: Prisma.BookWhereInput = {};
     // if name is given then search for books with that name
@@ -16,7 +18,6 @@ export const getBooks = async (req, res) => {
             name: { contains: author, mode: "insensitive" } as Prisma.StringFilter,
         };
     }
-    console.log(whereCondition)
     // whereCondition can have name or authorId
     const books = await prisma.book.findMany({
         where: whereCondition,
@@ -43,12 +44,19 @@ export const getBookById = async (req, res, next) => {
 
 // create a new book
 export const createBook = async (req, res, next) => {
+    const isAdminUser = await isAdmin(req)
+    if (!isAdminUser) {
+        return res.status(401).json({ message: 'not authorized' })  // if not admin then return
+    }
+
     try {
         const book = await prisma.book.create({
-            data: req.data,
+            data: req.body,
         });
         res.json({ book });
+
     } catch (e) {
+        console.log(e)
         e.type = "input";
         next(e);
     }
@@ -56,6 +64,10 @@ export const createBook = async (req, res, next) => {
 
 // delete a book
 export const deleteBook = async (req, res, next) => {
+    const isAdminUser = await isAdmin(req)
+    if (!isAdminUser) {
+        return res.status(401).json({ message: 'not authorized' })  // if not admin then return
+    }
     try {
         const bookId = req.params.id;
         const book = await prisma.book.delete({
@@ -72,6 +84,10 @@ export const deleteBook = async (req, res, next) => {
 
 // update a book
 export const updateBook = async (req, res, next) => {
+    const isAdminUser = await isAdmin(req)
+    if (!isAdminUser) {
+        return res.status(401).json({ message: 'not authorized' })  // if not admin then return
+    }
     try {
         const updated = await prisma.book.update({
             where: {

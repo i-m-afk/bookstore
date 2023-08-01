@@ -4,6 +4,7 @@ import { createNewCustomer, signin } from './handlers/customer'
 import router from './router'
 import { protect } from './modules/auth'
 import cors from 'cors'
+import { validatePayLoad } from './modules/middleware'
 
 const app = express()
 app.use(morgan('dev'))
@@ -17,7 +18,7 @@ app.get('/', (req, res) => {
     res.json({ message: 'hello' })
 })
 
-app.post('/customer', createNewCustomer)
+app.post('/customer', validatePayLoad, createNewCustomer)
 app.post('/signin', signin)
 app.use('/api', protect, router)
 
