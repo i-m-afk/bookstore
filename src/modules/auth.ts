@@ -50,13 +50,3 @@ export const hashPassword = (password) => {
 }
 
 
-// export const isAdmin = (req, res, next) => {
-//     if (req.user.role !== 'admin') {
-//         res.status(403)
-//         res.json({ message: 'not allowed' })
-//         return
-//     }
-//     next()
-// }
-
-
