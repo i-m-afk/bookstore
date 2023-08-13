@@ -48,10 +48,10 @@ model Customers {
 model Review {
   review_id  String   @id @default(uuid())
   created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
 
-  title      String
-  body       String
-  updated_on DateTime?
+  title String
+  body  String
 
   Customers  Customers? @relation(fields: [customerId], references: [id])
   customerId String
