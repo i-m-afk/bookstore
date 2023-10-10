@@ -17,6 +17,14 @@ export const createNewCustomer = async (req, res, next) => {
     }
     catch (e) {
         e.type = 'input'
+        // email already exists
+        if (e.code === 'P2002') {
+            e.message = 'email already exists'
+        }
+        // username already exists
+        if (e.code === 'P2002' && e.meta.target.includes('username')) {
+            e.message = 'username already exists'
+        }
         next(e)
     }
 }
