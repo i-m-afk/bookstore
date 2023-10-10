@@ -27,23 +27,7 @@ app.use((err, req, res, next) => {
         res.status(401).json({ message: 'unauthorized' })
     }
     else if (err.type === 'input') {
-        switch (err.message) {
-            case 'email already exists':
-                res.status(400).json({ message: 'email already exists' })
-                break;
-            case 'username already exists':
-                res.status(400).json({ message: 'username already exists' })
-                break;
-            case 'invalid credentials':
-                res.status(400).json({ message: 'invalid credentials' })
-                break;
-            case 'not authorized to change role':
-                res.status(401).json({ message: 'not authorized to change role' })
-                break;
-            default:
-                res.status(400).json({ message: 'invalid input' })
-                break;
-        }
+        res.status(400).json({ message: 'invalid input' })
     }
     else {
         res.status(500).json({ message: 'internal server error' })
